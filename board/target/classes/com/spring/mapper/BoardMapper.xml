@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.mapper.BoardMapper">
+	
+	
+	<select id="list" resultType="com.spring.domain.BoardVO">
+		<![CDATA[
+		select * 
+		from (select
+                    rownum rnum,bno,title,writer, regdate, updatedate
+			        from spring_board
+			        where 
+		]]>	        
+		
+		<include refid="criteria"></include>
+			        
+		<![CDATA[
+			        
+			        bno > 0 and rownum <= (#{pageNum}*#{amount}) order by bno desc)
+		where rnum > ((#{pageNum}-1)*#{amount})
+		]]>
+	</select>
+	
+	<select id="total" resultType="int">
+		select count(*) from spring_board where
+		<include refid="criteria"></include>
+		 bno > 0
+	</select>
+	
+	<insert id="register">
+		<selectKey keyProperty="bno" order="BEFORE" resultType="int">
+			<!-- 주로 pk 값을 미리 SQL을 통해 처리해두고 특정한 이름으로 보관 -->
+			select seq_board.nextval from dual		
+		</selectKey>
+		insert into spring_board(bno,title,content,writer) values(#{bno}, #{title},#{content},#{writer})
+	</insert>
+	
+	<select id="read" resultType="com.spring.domain.BoardVO">
+		select * from spring_board where bno = #{bno}
+	</select>
+	
+	<update id="modify">
+		update spring_board set title=#{title}, content=#{content} where bno = #{bno}
+	</update>
+	
+	<delete id="delete">
+		delete from spring_board where bno=#{bno}
+	</delete>
+	
+	<!-- 동적 sql 작성 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+			<foreach collection="typeArr" item="type">
+				<trim prefix="OR">
+					<choose>
+						<when test="type=='T'.toString()">
+							title like '%' || #{keyword} || '%'
+						</when>
+						<when test="type=='C'.toString()">
+							content like '%' || #{keyword} || '%'
+						</when>
+						<when test="type=='W'.toString()">
+							writer like '%' || #{keyword} || '%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+</mapper>
