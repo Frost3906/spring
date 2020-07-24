@@ -2,12 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.mapper.BoardMapper">
 	
+	<!-- 댓글수 변경 : 삽입 amount => +1, 삭제 amount => -1 -->
+	
+	
+	
+	<update id="updateReplyCnt">
+		update spring_board set replycnt = replycnt + #{amount}
+		where bno = #{bno} 
+	</update>
 	
 	<select id="list" resultType="com.spring.domain.BoardVO">
 		<![CDATA[
 		select * 
 		from (select
-                    rownum rnum,bno,title,writer, regdate, updatedate
+                    rownum rnum,bno,title,writer, regdate, updatedate, replycnt
 			        from spring_board
 			        where 
 		]]>	        
@@ -32,7 +40,7 @@
 			<!-- 주로 pk 값을 미리 SQL을 통해 처리해두고 특정한 이름으로 보관 -->
 			select seq_board.nextval from dual		
 		</selectKey>
-		insert into spring_board(bno,title,content,writer) values(#{bno}, #{title},#{content},#{writer})
+		insert into spring_board(bno,title,content,writer) values(#{bno},#{title},#{content},#{writer})
 	</insert>
 	
 	<select id="read" resultType="com.spring.domain.BoardVO">

@@ -36,8 +36,11 @@ let replyService=(function(){
 		let url = "/replies/pages/"+bno+"/"+page;
 		
 		$.getJSON(url, function(data){
+			console.log(data);
 			if(callback){
-				callback(data);
+				//data.replyCnt : 전체 댓글 수
+				//data.lst : 댓글 리스트
+				callback(data.replyCnt,data.list);
 			}
 		})
 		

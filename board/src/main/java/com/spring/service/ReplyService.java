@@ -3,6 +3,7 @@ package com.spring.service;
 import java.util.List;
 
 import com.spring.domain.Criteria;
+import com.spring.domain.ReplyPageVO;
 import com.spring.domain.ReplyVO;
 
 /*
@@ -20,6 +21,6 @@ public interface ReplyService {
 	public ReplyVO replyGet(int rno);
 	public boolean replyModify(ReplyVO vo);
 	public boolean replyDelete(int rno);
-	public List<ReplyVO> replyList(Criteria cri, int bno);
+	public ReplyPageVO replyList(Criteria cri, int bno);
 	public int getCountByBno(int bno);
 }
