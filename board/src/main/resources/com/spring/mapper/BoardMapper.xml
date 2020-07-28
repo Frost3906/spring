@@ -14,7 +14,7 @@
 	<select id="list" resultType="com.spring.domain.BoardVO">
 		<![CDATA[
 		select * 
-		from (select
+		from (select /*+INDEX_DESC(spring_board pk_spring_board) */
                     rownum rnum,bno,title,writer, regdate, updatedate, replycnt
 			        from spring_board
 			        where 

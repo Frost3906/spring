@@ -75,7 +75,7 @@ public class BoardController {
 			return "register";
 		}
 	}
-	@PreAuthorize("isAuthenticated()")
+	
 	@GetMapping(value = {"/read","/modify"})
 	public void read(int bno, @ModelAttribute("cri") Criteria cri, Model model) {
 		log.info("글 읽기 요청 : 글번호-"+bno+"..."+cri);
@@ -86,6 +86,8 @@ public class BoardController {
 		
 	}
 	
+	
+	@PreAuthorize("principal.username == #vo.writer")
 	@PostMapping("/modify")
 	public String modifyPost(BoardVO vo, RedirectAttributes rttr, @ModelAttribute("cri") Criteria cri) {
 		log.info("삭제 요청 : 글번호-"+vo+"..."+cri);
@@ -108,8 +110,9 @@ public class BoardController {
 	}
 	
 
+	@PreAuthorize("principal.username == #writer")
 	@PostMapping("/delete")
-	public String delete(int bno, RedirectAttributes rttr, Criteria cri) {
+	public String delete(int bno, String writer, RedirectAttributes rttr, Criteria cri) {
 		log.info("삭제 요청 : 글번호-"+bno+" "+cri);
 		
 		
